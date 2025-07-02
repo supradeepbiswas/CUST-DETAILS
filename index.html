@@ -128,23 +128,23 @@
 
   <div class="products" id="productList"></div>
 
-  <form id="customerForm">
+  <form action="https://usebasin.com/f/2ff55ec8c026" method="POST">
     <h2>Customer Details</h2>
     <div id="selectedProductDisplay" class="highlighted-product"></div>
 
+    <input type="hidden" name="product" id="selectedProduct">
+
     <label for="name">Name</label>
-    <input type="text" id="name" required>
+    <input type="text" name="name" required>
 
     <label for="age">Age</label>
-    <input type="number" id="age" required>
+    <input type="number" name="age" required>
 
     <label for="mobile">Mobile Number</label>
-    <input type="tel" id="mobile" required>
+    <input type="tel" name="mobile" required>
 
     <label for="address">Address</label>
-    <textarea id="address" rows="3" required></textarea>
-
-    <input type="hidden" id="selectedProduct" name="product">
+    <textarea name="address" rows="3" required></textarea>
 
     <button type="submit">Submit</button>
   </form>
@@ -156,7 +156,7 @@
   <script>
     const products = Array.from({ length: 20 }, (_, i) => `Product ${i + 1}`);
     const productList = document.getElementById("productList");
-    const hiddenInput = document.getElementById("selectedProduct");
+    const selectedProduct = document.getElementById("selectedProduct");
     const selectedProductDisplay = document.getElementById("selectedProductDisplay");
 
     products.forEach(product => {
@@ -166,47 +166,10 @@
       div.onclick = function () {
         document.querySelectorAll(".product-card").forEach(el => el.classList.remove("selected"));
         div.classList.add("selected");
-        hiddenInput.value = product;
         selectedProductDisplay.textContent = `Selected Product: ${product}`;
+        selectedProduct.value = product;
       };
       productList.appendChild(div);
-    });
-
-    document.getElementById("customerForm").addEventListener("submit", function(e) {
-      e.preventDefault();
-
-      if (!hiddenInput.value) {
-        alert("Please select a product before submitting.");
-        return;
-      }
-
-      const data = {
-        name: document.getElementById("name").value,
-        age: document.getElementById("age").value,
-        mobile: document.getElementById("mobile").value,
-        address: document.getElementById("address").value,
-        product: hiddenInput.value
-      };
-
-      // Replace the below URL with your Basin or working endpoint
-      fetch("https://usebasin.com/f/2ff55ec8c026", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
-      })
-      .then(response => {
-        if (!response.ok) throw new Error("Network response was not ok");
-        return response.text();
-      })
-      .then(result => {
-        window.location.href = "thankyou.html";
-      })
-      .catch(error => {
-        alert("There was an error submitting the form.");
-        console.error("Error:", error);
-      });
     });
   </script>
 
